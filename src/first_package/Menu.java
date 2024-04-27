@@ -10,19 +10,17 @@ public class Menu {
     }
 
     public void displayMenu() {
-        //wait for the user to enter a choice
         System.out.println("Menu:");
         System.out.println("1. Ajouter un étudiant");
         System.out.println("2. Ajouter un unite d'enseignement");
-         System.out.println("3. Ajouter un matiere");
-         System.out.println("4. Ajouter une note");
-         System.out.println("5. Afficher tous les étudiants");
-         System.out.println("6. Afficher tous les matieres");
-         System.out.println("7. Afficher toutes les notes");
-         System.out.println("8. Quitter");
+        System.out.println("3. Ajouter un matiere");
+        System.out.println("4. Ajouter une note");
+        System.out.println("5. Afficher tous les étudiants");
+        System.out.println("6. Afficher tous les matieres");
+        System.out.println("7. Afficher toutes les notes");
+        System.out.println("8. Supprimer un étudiant");
+        System.out.println("9. Quitter");
     }
-
-    
 
     public void ajouterEtd() {
         System.out.println("Entrez le nom de l'étudiant:");
@@ -83,8 +81,6 @@ public class Menu {
         System.out.println("Entrez la note :");
         double note = scanner.nextDouble();
         scanner.nextLine(); 
-
-        //use Etudiant and Matiere classes to add the grade
         Etudiant[] etudiants = universite.getEtudiants();
         Matiere[] matieres = universite.getMatieres();
         boolean etudiantFound = false;
@@ -95,21 +91,35 @@ public class Menu {
                 for (Matiere matiere : matieres) {
                     if (matiere != null && matiere.getNom().equals(MatiereNom)) {
                         matiereFound = true;
-                        // Add the grade
-                        if (matiereFound && etudiantFound) {
-                             etudiant.ajouterNote(matiere, noteType, null);
-                        break;
+                        MatiereNote[] matiereNotes = etudiant.getMatiereNotes();
+                        boolean found = false;
+                        for (MatiereNote matiereNote : matiereNotes) {
+                            if (matiereNote != null && matiereNote.getMatiere().getNom().equals(MatiereNom)) {
+                                Note noteObj = matiereNote.getNote();
+                                if (noteType.equals("ds")) {
+                                    noteObj.setDs(note);
+                                } else if (noteType.equals("examen")) {
+                                    noteObj.setExamen(note);
+                                }
+                                found = true;
+                                break;
+                            }
                         }
-                        else {
-                            System.out.println("Etudiant ou matiere non trouvé!");
+                        if (!found) {
+                            Note newNote = new Note();
+                            if (noteType.equals("ds")) {
+                                newNote.setDs(note);
+                            } else if (noteType.equals("examen")) {
+                                newNote.setExamen(note);
+                            }
+                            etudiant.ajouterMatiereNote(matiere, newNote);
                         }
-                       
                     }
                 }
                 break;
             }
         }
-        System.out.println("Grade added successfully!");
+        System.out.println("Note ajoutée avec succès!");
     }
 
     public void afficherEtudeants() {
@@ -143,17 +153,22 @@ public class Menu {
     }
 
     public void afficherNotes() {
-        System.out.println("Entrez le nom de la matiere :");
-        String matiereName = scanner.nextLine();
         Etudiant[] etudiants = universite.getEtudiants();
         for (Etudiant etudiant : etudiants) {
             if (etudiant != null) {
-                double[] notes = etudiant.getNotesForMatiere(matiereName);
-                if (notes != null) {
-                    System.out.println("Notes de l'etudiant " + etudiant.getNom() + " " + etudiant.getPrenom());
-                    System.out.println("DS: " + notes[0]);
-                    System.out.println("Examen: " + notes[1]);
+                System.out.println("Etudiant: " + etudiant.getNom());
+                MatiereNote[] matiereNotes = etudiant.getMatiereNotes();
+                if (matiereNotes.length > 0) {
+                    System.out.println("Notes:");
+                    for (MatiereNote matiereNote : matiereNotes) {
+                        if (matiereNote != null) {
+                            System.out.println("\t" + matiereNote.getMatiere().getNom() + " : " + matiereNote.getNote().getDs() + " " + matiereNote.getNote().getExamen());
+                        }
+                    }
+                } else {
+                    System.out.println("No Notes for this Etudiant.");
                 }
+                System.out.println("--------------------");
             }
         }
     }
@@ -194,10 +209,26 @@ public class Menu {
                     afficherNotes();
                     break;
                 case 8:
+                    supprimerEtudiant();
+                    break;
+                case 9:
                     exit();
                     break;
                 default:
                     System.out.println("Invalid");
+            }
+        }
+    }
+
+    void supprimerEtudiant() {
+        System.out.println("Entrez le nom de l'étudiant à supprimer:");
+        String etudiantNom = scanner.nextLine();
+        Etudiant[] etudiants = universite.getEtudiants();
+        for (int i = 0; i < etudiants.length; i++) {
+            if (etudiants[i] != null && etudiants[i].getNom().equals(etudiantNom)) {
+                etudiants[i] = null;
+                System.out.println("Etudiant supprimé avec succès!");
+                break;
             }
         }
     }

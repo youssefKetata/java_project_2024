@@ -4,13 +4,13 @@ public class Etudiant {
     private String nom;
     private String prenom;
     private UniteEnseignement[] unites;
-    double[][] notes; // Index 0 pour DS, Index 1 pour examen
+    private MatiereNote[] matiereNotes;
 
     public Etudiant(String nom, String prenom) {
         this.nom = nom;
         this.prenom = prenom;
         this.unites = new UniteEnseignement[10];
-        notes = new double[unites.length][2];
+        matiereNotes = new MatiereNote[10];
     }
 
     public String getNom() {
@@ -37,6 +37,10 @@ public class Etudiant {
         this.unites = unites;
     }
 
+    public MatiereNote[] getMatiereNotes() {
+        return matiereNotes;
+    }
+
     public void ajouterUnite(UniteEnseignement unite) {
         int index = -1;
         for (int i = 0; i < unites.length; i++) {
@@ -61,40 +65,56 @@ public class Etudiant {
             }
         }
     }
-        
-    // Fonction pour ajouter une note pour une matière spécifique
-    public void ajouterNote(Matiere matiere, String TypeNote, double[] note) {
-        for (int i = 0; i < unites.length; i++) {
-            if (unites[i] != null) {
-                for (int j = 0; j < unites[i].getMatieres().length; j++) {
-                    if (unites[i].getMatieres()[j] != null) {
-                        if (unites[i].getMatieres()[j].getNom().equals(matiere.getNom())) {
-                            if (TypeNote.equals("DS")) {
-                                notes[i][0] = note[0];
-                            } else if (TypeNote.equals("Examen")) {
-                                notes[i][1] = note[1];
-                            }
-                        }
-                    }
-                }
+
+    public void ajouterMatiereNote(Matiere matiere, Note note) {
+        for (int i = 0; i < matiereNotes.length; i++) {
+            if (matiereNotes[i] == null) {
+                matiereNotes[i] = new MatiereNote(matiere, note);
+                return;
             }
         }
-
     }
-    
 
-    public double[] getNotesForMatiere(String matiereName) {
-        for (int i = 0; i < unites.length; i++) {
-            if (unites[i] != null) {
-                for (int j = 0; j < unites[i].getMatieres().length; j++) {
-                    if (unites[i].getMatieres()[j] != null && unites[i].getMatieres()[j].getNom().equals(matiereName)) {
-                        return notes[i];
-                    }
-                }
+
+    public void afficherMatiereNotes() {
+        for (MatiereNote matiereNote : matiereNotes) {
+            if (matiereNote != null) {
+                System.out.println(matiereNote.getMatiere().getNom());
+                System.out.println("DS: " + matiereNote.getNote().getDs());
+                System.out.println("Examen: " + matiereNote.getNote().getExamen());
             }
         }
-        return null; // return null if the matiereName was not found
     }
+
+    public double calculerMoyenne() {
+        double moyenne = 0;
+        int count = 0;
+        for (MatiereNote matiereNote : matiereNotes) {
+            if (matiereNote != null) {
+                moyenne += matiereNote.getNote().getDs() + matiereNote.getNote().getExamen();
+                count += 2;
+            }
+        }
+        return moyenne / count;
+    }
+
+    // public String getDecision() {
+    //     double moyenne = calculerMoyenne();
+    //     if (moyenne >= 10) {
+    //         return "Admis";
+    //     } else {
+    //         return "Refusé";
+    //     }
+    // }
+
+    // public void afficher() {
+    //     System.out.println("Nom: " + nom);
+    //     System.out.println("Prenom: " + prenom);
+    //     afficherUnites();
+    //     afficherMatiereNotes();
+    //     System.out.println("Moyenne: " + calculerMoyenne());
+    //     System.out.println("Decision: " + getDecision());
+    // }
 
 
 }

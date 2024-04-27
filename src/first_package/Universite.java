@@ -28,6 +28,19 @@ public class Universite {
     }
 
     public Matiere[] getMatieres() {
+        // loop through unites and get matieres
+        int index = 0;
+        for (UniteEnseignement unite : unites) {
+            if (unite != null) {
+                Matiere[] matieres = unite.getMatieres();
+                for (Matiere matiere : matieres) {
+                    if (matiere != null) {
+                        this.matieres[index] = matiere;
+                        index++;
+                    }
+                }
+            }
+        }
         return matieres;
     }
 

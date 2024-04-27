@@ -1,8 +1,6 @@
 package first_package;
 
 public class Matiere {
-    // matiere represnet a subject of a 'unite d'enseignement', each 
-    // each sutdent need to have two grades for each matiere
     
     private String nom;
 

@@ -97,24 +97,4 @@ public class Etudiant {
         }
         return moyenne / count;
     }
-
-    // public String getDecision() {
-    //     double moyenne = calculerMoyenne();
-    //     if (moyenne >= 10) {
-    //         return "Admis";
-    //     } else {
-    //         return "Refusé";
-    //     }
-    // }
-
-    // public void afficher() {
-    //     System.out.println("Nom: " + nom);
-    //     System.out.println("Prenom: " + prenom);
-    //     afficherUnites();
-    //     afficherMatiereNotes();
-    //     System.out.println("Moyenne: " + calculerMoyenne());
-    //     System.out.println("Decision: " + getDecision());
-    // }
-
-
 }

@@ -162,7 +162,8 @@ public class Menu {
                     System.out.println("Notes:");
                     for (MatiereNote matiereNote : matiereNotes) {
                         if (matiereNote != null) {
-                            System.out.println("\t" + matiereNote.getMatiere().getNom() + " : " + matiereNote.getNote().getDs() + " " + matiereNote.getNote().getExamen());
+                            System.out.println("\t" + matiereNote.getMatiere().getNom() + " : " +
+                            matiereNote.getNote().getDs() + " " + matiereNote.getNote().getExamen());
                         }
                     }
                 } else {
